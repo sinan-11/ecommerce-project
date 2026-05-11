@@ -11,7 +11,7 @@ export const ProductProvider = ({ children }) => {
   useEffect(() => {
     getProducts()
       .then((res) => {
-        setProducts(res.data)
+        setProducts(res.data.products)
         setLoading(false)
       })
       .catch(() => {
