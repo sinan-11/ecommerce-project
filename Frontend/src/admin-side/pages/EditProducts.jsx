@@ -21,29 +21,37 @@ function EditProducts() {
     sizes: []
   })
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/products/${id}`)
-      .then(res => {
-        const product = res.data
-        setForm({
-          name: product.name || "",
-          brand: product.brand || "",
-          category: product.category || "",
-          gender: product.gender || "",
-          price: product.price || "",
-          description: product.description || "",
-          images: product.images || [],
-          // ✅ Preserve both size and stock from the database
-          sizes: product.sizes?.map(s => ({ size: s.size, stock: s.stock })) || []
-        })
+useEffect(() => {
+  axios
+    .get(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
+    .then(res => {
+      const product = res.data
+
+      setForm({
+        name: product.name || "",
+        brand: product.brand || "",
+        category: product.category || "",
+        gender: product.gender || "",
+        price: product.price || "",
+        description: product.description || "",
+        images: product.images || [],
+
+        // Preserve both size and stock from the database
+        sizes:
+          product.sizes?.map(s => ({
+            size: s.size,
+            stock: s.stock
+          })) || []
       })
-      .catch(() => {
-        toast.error("Product not found")
-        navigate("/admin/products")
-      })
-      .finally(() => setLoading(false))
-  }, [id])
+    })
+
+    .catch(() => {
+      toast.error("Product not found")
+      navigate("/admin/products")
+    })
+
+    .finally(() => setLoading(false))
+}, [id, navigate])
 
   const handleChange = e =>
     setForm({ ...form, [e.target.name]: e.target.value })
